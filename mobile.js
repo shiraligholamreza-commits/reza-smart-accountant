@@ -1,0 +1,1 @@
+(()=>{const e=document.getElementById('connectionState');function update(){if(e)e.textContent=navigator.onLine?'اتصال شبکه برقرار است؛ داده ها همچنان محلی ذخیره می شوند.':'دستگاه آفلاین است؛ ثبت های محلی ممکن است کار کنند.'}addEventListener('online',update);addEventListener('offline',update);update();})();

@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#12384c"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>حسابدار رضا — آزمایشی v0.4</title><link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="assets/icon-192.png"><link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header><div class="container head"><div><h1>حسابدار رضا</h1><p>نسخه آزمایشی ۰٫۴ · بدون هزینه سرور و API</p></div><span class="tag">محلی / آفلاین*</span></div></header>
+<main class="container">
+<div class="warning" id="securityWarning"><b>فقط داده ساختگی:</b> این نسخه برای آزمایش است، هنوز از نظر حفاظت اطلاعات مالی و محرمانگی موکلان ممیزی نشده است. ذخیره محلی مرورگر رمزگذاری شده نیست. از اطلاعات واقعی و محرمانه استفاده نکنید.</div>
+<section class="panel" id="mobileInstallGuide"><h2>نصب روی صفحه اصلی آیفون</h2><p class="muted small">پس از انتشار همین پوشه روی یک نشانی HTTPS ثابت، آن نشانی را در Safari آیفون باز کنید، دکمه اشتراک گذاری را بزنید و گزینه Add to Home Screen (افزودن به صفحه اصلی) را انتخاب کنید. پس از یک بار باز شدن آنلاین، بخش اصلی برنامه می تواند بدون اینترنت کار کند. برای استفاده امن با داده واقعی هنوز آماده نیست.</p><p class="muted small"><b>مهم:</b> فایل HTML داخل Files آیفون یا آدرس HTTP رایانه، نصب پایدار PWA را تضمین نمی کند. هر دو دفتر فقط در همان مرورگر/نشانی ذخیره می شوند؛ قبل از تعویض گوشی یا پاک کردن مرورگر، از هر دو دفتر پشتیبان بگیرید.</p><div id="connectionState" class="muted small" aria-live="polite">وضعیت اتصال در حال بررسی...</div></section>
+<div class="booktabs"><button class="book active" id="tabPersonal" data-book="personal">حساب های شخصی</button><button class="book" id="tabOffice" data-book="office">دفتر وکالت</button></div>
+<div class="layout">
+<section class="panel">
+<h2>ثبت سریع با فارسی</h2><p class="muted small">مثال: «دو کیلو گوجه ده هزار تومان از بانک شهر خریدم». نتیجه فقط پیشنهاد است و با تایید شما ثبت می شود.</p>
+<label for="command">شرح گفتاری یا نوشتاری</label><textarea id="command" rows="3" placeholder="متن هزینه یا دریافت را وارد کنید..."></textarea>
+<div class="actions"><button id="parse" class="primary">آماده سازی ثبت</button><button id="voice">دیکته صوتی (در صورت پشتیبانی)</button></div>
+<div class="line"></div>
+<h3>عکس رسید</h3><label for="receipt">انتخاب یا عکس برداری از رسید</label><input type="file" id="receipt" accept="image/*" capture="environment"><img id="receiptPreview" class="preview hidden" alt="پیش نمایش عکس رسید">
+<div class="actions"><button id="ocr">پیشنهاد متن با OCR اختیاری</button><button id="ocrGuide">راهنمای خواندن با ChatGPT</button></div>
+<p id="ocrInfo" class="muted small">عکس پس از تایید همراه تراکنش روی همین دستگاه ذخیره می شود. OCR اختیاری در بار نخست به اینترنت و بارگذاری کتابخانه بیرونی نیاز دارد.</p>
+<textarea rows="2" id="ocrText" placeholder="متن خوانده شده رسید را اینجا بررسی و اصلاح کنید..."></textarea>
+<button id="applyOCR">انتقال متن رسید به فرم</button>
+<div class="line"></div><h3>پیش نویس تراکنش</h3>
+<div class="formgrid">
+<div><label for="txType">نوع عملیات</label><select id="txType"><option value="expense">هزینه</option><option value="income">دریافت با ماهیت نامشخص</option><option value="earned">درآمد قطعی</option><option value="transfer">انتقال بین حساب ها</option><option value="trust_in">دریافت امانی</option><option value="trust_out">پرداخت از وجه امانی</option><option value="receivable">طلب بدون گردش وجه</option><option value="payable">بدهی بدون گردش وجه</option></select></div>
+<div><label for="amount">مبلغ (تومان)</label><input id="amount" inputmode="numeric" placeholder="10000"></div>
+<div><label for="account">حساب (انتخاب الزامی)</label><select id="account"></select></div>
+<div id="destinationBox" class="hidden"><label for="toAccount">حساب مقصد انتقال</label><select id="toAccount"></select></div>
+<div><label for="party">طرف حساب</label><input id="party" placeholder="اختیاری"></div>
+<div><label for="category">گروه</label><input id="category" placeholder="خواربار، هزینه پرونده و ..."></div>
+<div id="caseBox" class="hidden"><label for="caseId">شناسه پرونده</label><input id="caseId" placeholder="کد داخلی، بدون نام محرمانه"></div>
+<div><label for="txDate">تاریخ ثبت (میلادی؛ در سوابق شمسی نمایش داده می شود)</label><input type="date" id="txDate"></div>
+</div>
+<label for="notes">توضیحات</label><input id="notes" placeholder="شرح قابل جستجو">
+<div class="actions"><button id="saveTx" class="primary">تایید و ثبت</button><button id="clearForm">پاک کردن فرم</button></div>
+<div id="message" class="message" aria-live="polite"></div>
+</section>
+<aside>
+<section class="panel"><h2>خلاصه همین دفتر</h2><div id="stats" class="cards"></div><h3>حساب ها و مانده ثبت شده</h3><div id="balances" class="cards"></div><div class="line"></div>
+<label for="newAccount">ایجاد حساب جدید</label><input id="newAccount" placeholder="نام حساب"><label for="newOpening">مانده افتتاحیه (تومان)</label><input id="newOpening" inputmode="numeric" placeholder="0"><button id="addAccount">افزودن حساب</button><p class="muted small">مانده ها از ثبت های خودتان محاسبه می شوند و لزوما مانده واقعی بانک نیستند.</p></section>
+<section class="panel space"><h2>پشتیبان و تبادل با ویندوز</h2><p class="muted small"><strong>هر دفتر فایل مستقل دارد.</strong> فایل خروجی با رمز عبور شما رمزگذاری می شود. همان فایل را روی دستگاه دیگر وارد و با تراکنش های آن ادغام کنید.</p>
+<button id="backup" class="primary wide">خروجی رمزگذاری شده این دفتر</button>
+<label for="restoreFile">ورود پشتیبان یا فایل تبادل همین دفتر</label><input type="file" id="restoreFile" accept=".rza,.json,application/json"><div class="actions"><button id="merge">ادغام اطلاعات (بدون حذف قبلی)</button><button id="replace" class="danger">جایگزینی کامل این دفتر</button></div>
+<div class="line"></div><button id="csv">خروجی CSV برای Excel و Numbers</button>
+<p class="muted small">تبادل فعلا <b>فایل محور و دستی</b> است؛ همگام سازی خودکار Wi-Fi هنوز اجرا نشده است. رمز پشتیبان را گم نکنید؛ امکان بازیابی آن وجود ندارد.</p></section>
+</aside>
+</div>
+<section class="panel space" id="monthlyReport"><h2>گزارش ماه و پرونده</h2>
+<p class="muted small">گزارش از داده های همین دفتر تهیه می شود. ماه را به میلادی وارد کنید؛ تاریخ تراکنش ها در سابقه به شمسی نمایش داده می شود.</p>
+<div class="formgrid"><div><label for="reportMonth">ماه گزارش (میلادی)</label><input id="reportMonth" type="month"></div><div><label for="reportCase">شناسه پرونده (اختیاری، مخصوص دفتر)</label><input id="reportCase" placeholder="همه پرونده ها"></div></div>
+<div class="actions"><button id="buildReport" class="primary">محاسبه گزارش</button></div><div id="reportResult" aria-live="polite"></div>
+</section>
+<section class="panel space"><h2>سوابق و ابطال تراکنش ها</h2><div class="formgrid"><div><label for="search">جستجو</label><input id="search" placeholder="شرح، طرف حساب، پرونده"></div><div><label for="filterType">نوع</label><select id="filterType"><option value="all">همه</option><option value="expense">هزینه</option><option value="income">دریافت نامشخص</option><option value="earned">درآمد</option><option value="transfer">انتقال</option><option value="trust_in">امانی دریافتی</option><option value="trust_out">امانی پرداختی</option><option value="receivable">طلب</option><option value="payable">بدهی</option></select></div></div><div id="history"></div></section>
+<footer>نسخه ۰٫۴ برای آزمایش با اطلاعات ساختگی. نصب آفلاین PWA به بستر امن HTTPS یا localhost نیاز دارد. روی آیفون در آدرس HTTP شبکه محلی، اجرای آفلاین قابل تضمین نیست. عکس رسید و تشخیص صوتی فقط در صورت پشتیبانی دستگاه قابل استفاده است.</footer>
+</main>
+<div class="modal hidden" id="imageModal"><div class="modalBody"><button id="closeModal">بستن تصویر</button><img id="modalImage" alt="رسید ثبت شده"></div></div>
+<script src="app.js" defer></script><script defer src="mobile.js"></script>
+</body></html>
